@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Games</title>
+<meta name="description" content="Free games by me. Download now.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f14;
+    color: #fff;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid #2a2a3e;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #4ade80, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: #888; font-size: 13px; margin-top: 6px; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .game-card {
+    background: #1a1a24;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #2a2a3e;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+  .game-card:hover {
+    transform: translateY(-5px);
+    border-color: #4ade80;
+    box-shadow: 0 10px 30px rgba(74, 222, 128, 0.15);
+  }
+  .game-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    background: #222;
+    display: block;
+  }
+  .game-info { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+  .game-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .game-desc { color: #999; font-size: 13px; margin-bottom: 12px; flex: 1; }
+  .game-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tag {
+    background: #2a2a3e; color: #aaa;
+    padding: 4px 10px; border-radius: 20px; font-size: 11px;
+    font-weight: 600;
+  }
+  .btn-download {
+    display: block; width: 100%; padding: 13px;
+    background: linear-gradient(135deg, #4ade80, #22d3ee);
+    color: #000; font-weight: 800; font-size: 14px;
+    text-align: center; text-decoration: none; border-radius: 10px;
+    transition: opacity 0.2s;
+  }
+  .btn-download:hover { opacity: 0.88; }
+  .btn-mirror {
+    display: block; width: 100%; padding: 10px; margin-top: 8px;
+    background: transparent; color: #888; font-size: 12px;
+    text-align: center; text-decoration: none;
+    border: 1px solid #2a2a3e; border-radius: 10px;
+  }
+  .btn-mirror:hover { color: #ccc; border-color: #444; }
+  .loading, .empty {
+    text-align: center; color: #666; padding: 60px 20px; font-size: 14px;
+  }
+  footer { text-align: center; padding: 30px 20px; color: #555; font-size: 12px; }
+  @media (max-width: 600px) {
+    header h1 { font-size: 22px; }
+    .container { padding: 16px 14px; }
+    .games-grid { grid-template-columns: 1fr; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎮 My Games</h1>
+  <p>Free games — download & play</p>
+</header>
+
+<div class="container">
+  <div class="games-grid" id="gamesGrid">
+    <div class="loading">Loading games...</div>
+  </div>
+</div>
+
+<footer>
+  © <span id="year"></span> My Games. All rights reserved.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  fetch('games.json?v=' + Date.now())
+    .then(res => res.json())
+    .then(data => {
+      const grid = document.getElementById('gamesGrid');
+      grid.innerHTML = '';
+
+      if (!data.games || data.games.length === 0) {
+        grid.innerHTML = '<div class="empty">Abhi koi game nahi hai. Jald aa raha hai!</div>';
+        return;
+      }
+
+      data.games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+
+        const tagsHTML = (game.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+        const mirrorHTML = game.mirrorLink
+          ? `<a href="${game.mirrorLink}" target="_blank" rel="noopener" class="btn-mirror">Mirror Download</a>`
+          : '';
+
+        const fallbackImg = `https://via.placeholder.com/600x400/1a1a2e/4ade80?text=${encodeURIComponent(game.title)}`;
+
+        card.innerHTML = `
+          <img src="${game.image || fallbackImg}" alt="${game.title}"
+               class="game-thumb"
+               onerror="this.onerror=null;this.src='${fallbackImg}'">
+          <div class="game-info">
+            <div class="game-title">${game.title}</div>
+            <div class="game-desc">${game.description}</div>
+            <div class="game-tags">${tagsHTML}</div>
+            <a href="${game.itchLink}" target="_blank" rel="noopener" class="btn-download">⬇ Download</a>
+            ${mirrorHTML}
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('gamesGrid').innerHTML =
+        '<div class="empty">Games load nahi ho paye. Baad me try karo.</div>';
+    });
+</script>
+
+</body>
+  </html>

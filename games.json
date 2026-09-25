@@ -1,0 +1,12 @@
+{
+  "games": [
+    {
+      "title": "Tumhare Game Ka Naam",
+      "description": "Yahan 2-3 line me game ke baare me likho. Kya hai, kaise khelte hain.",
+      "image": "https://i.imgur.com/XXXXX.jpg",
+      "tags": ["Action", "PC", "Free"],
+      "itchLink": "https://yourname.itch.io/gamename",
+      "mirrorLink": ""
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 {
   "games": [
     {
-      "title": "Tumhare Game Ka Naam",
-      "description": "Yahan 2-3 line me game ke baare me likho. Kya hai, kaise khelte hain.",
-      "image": "https://i.imgur.com/XXXXX.jpg",
-      "tags": ["Action", "PC", "Free"],
-      "itchLink": "https://yourname.itch.io/gamename",
+      "title": "Tiny Village",
+      "description": "Tiny Village is a cozy pixel-art farming and village-building game. Start with one small house, explore a large world, collect resources, farm, fish, mine, buy and sell items, earn money, and slowly build your own growing village. 🌱🏡",
+      "image": "https://ibb.co/sv58Qznc",
+      "tags": ["Farming", "Pixel Art", "Building", "Cozy"],
+      "itchLink": "https://box-deginer.itch.io/tiny-village",
       "mirrorLink": ""
     }
   ]
-        }
+}

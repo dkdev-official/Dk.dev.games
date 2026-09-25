@@ -3,158 +3,804 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Games</title>
-<meta name="description" content="Free games by me. Download now.">
+<title>DK.DEV.GAMES — Play Free Games</title>
+<meta name="description" content="Download free games by DK. Safe, verified, and always free.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
 <style>
+  :root {
+    --bg: #0b0e14;
+    --bg-2: #11151f;
+    --bg-3: #1a1f2e;
+    --border: #232a3d;
+    --border-hover: #3b82f6;
+    --text: #e4e7ee;
+    --text-dim: #8b95a8;
+    --accent: #3b82f6;
+    --accent-2: #60a5fa;
+    --accent-glow: rgba(59, 130, 246, 0.4);
+    --green: #4ade80;
+    --grad: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #0f0f14;
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
+    overflow-x: hidden;
     line-height: 1.5;
   }
-  header {
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
-    padding: 24px 20px;
-    text-align: center;
-    border-bottom: 1px solid #2a2a3e;
+
+  /* Animated background glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 20% 20%, rgba(59,130,246,0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(139,92,246,0.08) 0%, transparent 40%);
+    z-index: -1;
+    pointer-events: none;
   }
-  header h1 {
-    font-size: 26px;
-    font-weight: 800;
-    background: linear-gradient(90deg, #4ade80, #22d3ee);
+
+  /* ===== HEADER ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11, 14, 20, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    color: var(--text);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .logo:hover { transform: scale(1.03); }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--grad);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  .logo-text {
+    background: linear-gradient(90deg, #fff 0%, #93c5fd 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  header p { color: #888; font-size: 13px; margin-top: 6px; }
-  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
-  .games-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+
+  /* Search */
+  .search-wrap {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
   }
-  .game-card {
-    background: #1a1a24;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid #2a2a3e;
-    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-    display: flex;
-    flex-direction: column;
-  }
-  .game-card:hover {
-    transform: translateY(-5px);
-    border-color: #4ade80;
-    box-shadow: 0 10px 30px rgba(74, 222, 128, 0.15);
-  }
-  .game-thumb {
+
+  .search-input {
     width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
-    background: #222;
-    display: block;
+    padding: 11px 45px 11px 44px;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+    font-family: inherit;
   }
-  .game-info { padding: 16px; display: flex; flex-direction: column; flex: 1; }
-  .game-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-  .game-desc { color: #999; font-size: 13px; margin-bottom: 12px; flex: 1; }
-  .game-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .tag {
-    background: #2a2a3e; color: #aaa;
-    padding: 4px 10px; border-radius: 20px; font-size: 11px;
+  .search-input::placeholder { color: var(--text-dim); }
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+    background: var(--bg-2);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+    font-size: 15px;
+  }
+
+  .search-shortcut {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  /* Nav links */
+  .nav-links {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .nav-link {
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-link:hover {
+    color: var(--text);
+    background: var(--bg-3);
+  }
+  .nav-link.active {
+    color: var(--accent-2);
+    background: rgba(59,130,246,0.1);
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 50px 20px 30px;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(74,222,128,0.1);
+    border: 1px solid rgba(74,222,128,0.3);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+
+  .hero h1 span {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+
+  /* Trust badges */
+  .trust-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
     font-weight: 600;
   }
+  .trust-item svg { color: var(--green); }
+
+  /* ===== GAMES SECTION ===== */
+  .games-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 20px 60px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--grad);
+    border-radius: 2px;
+  }
+
+  .game-count {
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg-3);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+
+  /* ===== GAME CARD ===== */
+  .game-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .game-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    padding: 1px;
+    background: var(--grad);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .game-card:hover {
+    transform: translateY(-6px);
+    border-color: transparent;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px var(--accent-glow);
+  }
+  .game-card:hover::before { opacity: 1; }
+
+  .thumb-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: var(--bg-3);
+  }
+
+  .game-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+    display: block;
+  }
+  .game-card:hover .game-thumb { transform: scale(1.08); }
+
+  .thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(11,14,20,0.9) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: flex-end;
+    padding: 14px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .game-card:hover .thumb-overlay { opacity: 1; }
+
+  .badge-free {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--green);
+    color: #000;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 9px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(74,222,128,0.4);
+  }
+
+  .game-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .game-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+    color: #fff;
+  }
+
+  .game-desc {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-bottom: 12px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .game-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    background: rgba(59,130,246,0.1);
+    color: var(--accent-2);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(59,130,246,0.2);
+  }
+
   .btn-download {
-    display: block; width: 100%; padding: 13px;
-    background: linear-gradient(135deg, #4ade80, #22d3ee);
-    color: #000; font-weight: 800; font-size: 14px;
-    text-align: center; text-decoration: none; border-radius: 10px;
-    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    background: var(--grad);
+    color: #fff;
+    font-weight: 800;
+    font-size: 13px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 9px;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 15px var(--accent-glow);
+    position: relative;
+    overflow: hidden;
   }
-  .btn-download:hover { opacity: 0.88; }
+
+  .btn-download::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  .btn-download:hover::before { left: 100%; }
+
+  .btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+  }
+
+  .btn-download svg { width: 15px; height: 15px; }
+
   .btn-mirror {
-    display: block; width: 100%; padding: 10px; margin-top: 8px;
-    background: transparent; color: #888; font-size: 12px;
-    text-align: center; text-decoration: none;
-    border: 1px solid #2a2a3e; border-radius: 10px;
+    display: block;
+    width: 100%;
+    padding: 9px;
+    margin-top: 8px;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
   }
-  .btn-mirror:hover { color: #ccc; border-color: #444; }
+  .btn-mirror:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(59,130,246,0.05);
+  }
+
+  /* Empty / loading */
   .loading, .empty {
-    text-align: center; color: #666; padding: 60px 20px; font-size: 14px;
+    text-align: center;
+    color: var(--text-dim);
+    padding: 80px 20px;
+    font-size: 14px;
+    grid-column: 1 / -1;
   }
-  footer { text-align: center; padding: 30px 20px; color: #555; font-size: 12px; }
+
+  .spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg-2);
+    padding: 30px 20px 100px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+
+  footer a { color: var(--accent-2); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  .footer-brand {
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 8px;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== MOBILE BOTTOM NAV ===== */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(17, 21, 31, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    z-index: 100;
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 10px;
+    transition: all 0.2s;
+  }
+  .mobile-nav-item.active { color: var(--accent-2); }
+  .mobile-nav-item svg { width: 20px; height: 20px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .header-inner { gap: 12px; }
+    .logo-text { display: none; }
+    .hero { padding: 30px 20px 20px; }
+    .hero h1 { font-size: 26px; }
+  }
+
   @media (max-width: 600px) {
-    header h1 { font-size: 22px; }
-    .container { padding: 16px 14px; }
-    .games-grid { grid-template-columns: 1fr; gap: 16px; }
+    .header-inner { padding: 12px 16px; gap: 10px; }
+    .search-wrap { max-width: none; }
+    .search-shortcut { display: none; }
+    .search-input { font-size: 13px; padding: 10px 14px 10px 38px; }
+    .logo-icon { width: 32px; height: 32px; font-size: 18px; }
+    .hero { padding: 24px 16px 16px; }
+    .hero p { font-size: 13px; }
+    .trust-bar { gap: 6px; }
+    .trust-item { font-size: 11px; padding: 6px 10px; }
+    .games-section { padding: 10px 14px 40px; }
+    .games-grid { grid-template-columns: 1fr; gap: 14px; }
+    .mobile-nav { display: block; }
+    .section-head { margin-bottom: 14px; }
+    .game-info { padding: 14px; }
+  }
+
+  @media (min-width: 1200px) {
+    .games-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
   }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <h1>🎮 My Games</h1>
-  <p>Free games — download & play</p>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🎮</div>
+      <span class="logo-text">DK.DEV.GAMES</span>
+    </a>
+
+    <div class="search-wrap">
+      <span class="search-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Search games...">
+      <span class="search-shortcut">Ctrl K</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="#" class="nav-link active">Browse</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+  </div>
 </header>
 
-<div class="container">
-  <div class="games-grid" id="gamesGrid">
-    <div class="loading">Loading games...</div>
-  </div>
-</div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">All Games Free</div>
+  <h1>Play. Download. <span>Enjoy.</span></h1>
+  <p>Handcrafted games by DK. Safe downloads, no hidden costs, no ads on download page.</p>
 
+  <div class="trust-bar">
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      Verified Safe
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      Powered by Itch.io
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      100% Free
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section class="games-section" id="about">
+  <div class="section-head">
+    <div class="section-title">All Games</div>
+    <div class="game-count" id="gameCount">0 games</div>
+  </div>
+  <div class="games-grid" id="gamesGrid">
+    <div class="loading">
+      <div class="spinner"></div>
+      Loading games...
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-  © <span id="year"></span> My Games. All rights reserved.
+  <div class="footer-brand">DK.DEV.GAMES</div>
+  <p>© <span id="year"></span> DK.DEV.GAMES — All rights reserved.</p>
+  <p style="margin-top: 6px;">Games hosted on <a href="https://itch.io" target="_blank" rel="noopener">Itch.io</a></p>
 </footer>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <a href="#" class="mobile-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="#about" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Browse
+    </a>
+    <a href="https://itch.io" target="_blank" rel="noopener" class="mobile-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Itch.io
+    </a>
+  </div>
+</nav>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  fetch('games.json?v=' + Date.now())
-    .then(res => res.json())
-    .then(data => {
-      const grid = document.getElementById('gamesGrid');
-      grid.innerHTML = '';
+  let allGames = [];
 
-      if (!data.games || data.games.length === 0) {
-        grid.innerHTML = '<div class="empty">Abhi koi game nahi hai. Jald aa raha hai!</div>';
-        return;
-      }
+  const grid = document.getElementById('gamesGrid');
+  const countEl = document.getElementById('gameCount');
+  const searchInput = document.getElementById('searchInput');
 
-      data.games.forEach(game => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
+  function renderGames(list) {
+    grid.innerHTML = '';
 
-        const tagsHTML = (game.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
-        const mirrorHTML = game.mirrorLink
-          ? `<a href="${game.mirrorLink}" target="_blank" rel="noopener" class="btn-mirror">Mirror Download</a>`
-          : '';
+    if (!list || list.length === 0) {
+      grid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">🎮</div>
+          <div>Koi game nahi mila</div>
+        </div>`;
+      countEl.textContent = '0 games';
+      return;
+    }
 
-        const fallbackImg = `https://via.placeholder.com/600x400/1a1a2e/4ade80?text=${encodeURIComponent(game.title)}`;
+    countEl.textContent = list.length + ' game' + (list.length > 1 ? 's' : '');
 
-        card.innerHTML = `
+    list.forEach(game => {
+      const card = document.createElement('div');
+      card.className = 'game-card';
+
+      const tagsHTML = (game.tags || [])
+        .map(t => `<span class="tag">${t}</span>`).join('');
+
+      const mirrorHTML = game.mirrorLink
+        ? `<a href="${game.mirrorLink}" target="_blank" rel="noopener" class="btn-mirror">Mirror Download</a>`
+        : '';
+
+      const fallbackImg = `https://via.placeholder.com/600x400/1a1f2e/3b82f6?text=${encodeURIComponent(game.title)}`;
+
+      card.innerHTML = `
+        <div class="thumb-wrap">
           <img src="${game.image || fallbackImg}" alt="${game.title}"
                class="game-thumb"
                onerror="this.onerror=null;this.src='${fallbackImg}'">
-          <div class="game-info">
-            <div class="game-title">${game.title}</div>
-            <div class="game-desc">${game.description}</div>
-            <div class="game-tags">${tagsHTML}</div>
-            <a href="${game.itchLink}" target="_blank" rel="noopener" class="btn-download">⬇ Download</a>
-            ${mirrorHTML}
-          </div>
-        `;
+          <span class="badge-free">FREE</span>
+          <div class="thumb-overlay">VIEW GAME →</div>
+        </div>
+        <div class="game-info">
+          <div class="game-title">${game.title}</div>
+          <div class="game-desc">${game.description}</div>
+          <div class="game-tags">${tagsHTML}</div>
+          <a href="${game.itchLink}" target="_blank" rel="noopener" class="btn-download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            DOWNLOAD NOW
+          </a>
+          ${mirrorHTML}
+        </div>
+      `;
 
-        grid.appendChild(card);
-      });
+      grid.appendChild(card);
+    });
+  }
+
+  // Load games
+  fetch('games.json?v=' + Date.now())
+    .then(res => res.json())
+    .then(data => {
+      allGames = data.games || [];
+      renderGames(allGames);
     })
     .catch(err => {
       console.error(err);
-      document.getElementById('gamesGrid').innerHTML =
-        '<div class="empty">Games load nahi ho paye. Baad me try karo.</div>';
+      grid.innerHTML = `
+        <div class="empty">
+          <div class="empty-icon">⚠️</div>
+          <div>Games load nahi ho paye</div>
+        </div>`;
     });
+
+  // Search
+  searchInput.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    if (!q) { renderGames(allGames); return; }
+    const filtered = allGames.filter(g =>
+      g.title.toLowerCase().includes(q) ||
+      (g.description || '').toLowerCase().includes(q) ||
+      (g.tags || []).some(t => t.toLowerCase().includes(q))
+    );
+    renderGames(filtered);
+  });
+
+  // Ctrl+K shortcut
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+    }
+  });
 </script>
 
 </body>
-  </html>
+ </html>
